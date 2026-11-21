@@ -1,32 +1,47 @@
-# React + TypeScript + Vite
+# Villa Peñas · Consumo de API REST
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Examen práctico de Programación III, Universidad Nacional, Sede Regional Chorotega.
+Aplicación web en **React + TypeScript + Vite** que consume la API pública de Villa Peñas.
 
-Currently, two official plugins are available:
+**Estudiante:** Bryan Guerrero Ugalde
+**API:** https://villa-penas-production.up.railway.app (documentación: `/api/docs`)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Cómo iniciar
 
-## React Compiler
+1. Requisitos: Node.js 18 o superior.
+2. Instalar dependencias: `npm install`
+3. Copiar `.env.example` a `.env` (la variable `VITE_API_URL` ya trae la URL de la API).
+4. Iniciar: `npm run dev`
+5. Abrir http://localhost:5173 (el puerto está fijo porque es el origen autorizado por CORS).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Endpoints consumidos (solo GET públicos, sin credenciales)
 
-## Expanding the Oxlint configuration
+| Endpoint | Uso en la interfaz |
+|---|---|
+| `GET /public/paquetes` | Catálogo con búsqueda por texto y filtro por precio máximo |
+| `GET /public/paquetes/{id}` | Vista detallada del paquete con los servicios que incluye |
+| `GET /public/opciones-productos-adicionales` | Extras con imagen, precio y filtro por producto |
+| `GET /public/instagram` | Pestaña adicional (ver limitaciones) |
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Estructura
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+- `src/types`: interfaces TypeScript según las respuestas reales
+- `src/services`: capa de consumo (`http.ts` + un servicio por endpoint)
+- `src/hooks`: `useFetch` (maneja carga, error y cancelación con AbortController)
+- `src/components`: componentes reutilizables (`AsyncState`, tarjetas, vistas)
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Estados manejados
+
+Cargando, sin resultados y error de consulta (componente `AsyncState`).
+
+## Cómo comprobé los resultados
+
+- Probé cada endpoint en Swagger con "Try it out" (capturas en `evidencias/swagger`).
+- Verifiqué las solicitudes y respuestas reales en DevTools → Network (`evidencias/network`).
+- Probé los tres estados de la interfaz (`evidencias/interfaz`).
+
+## Limitaciones encontradas
+
+- `GET /public/instagram` respondió **502** ("No fue posible obtener las publicaciones de Instagram") durante el examen. Es una falla externa del servidor; se dejó evidencia y se informó a la docente. Por eso el tercer servicio principal es el detalle del paquete.
+- Las listas no tienen paginación; el filtrado se hace en el cliente.
+- La estructura de las publicaciones de Instagram no pudo confirmarse.
