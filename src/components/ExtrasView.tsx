@@ -20,10 +20,17 @@ export default function ExtrasView() {
     return (
         <section>
             <div className="toolbar">
-                <select value={producto} onChange={(e) => setProducto(e.target.value)}>
+                <select
+                    name="producto"
+                    aria-label="Filtrar por producto"
+                    value={producto}
+                    onChange={(e) => setProducto(e.target.value)}
+                >
                     <option value="todos">Todos los productos</option>
                     {productos.map((p) => (
-                        <option key={p} value={p}>{p}</option>
+                        <option key={p} value={p}>
+                            {p}
+                        </option>
                     ))}
                 </select>
             </div>
